@@ -58,17 +58,3 @@ class StockSerializer(serializers.ModelSerializer):
 
         return stock
 
-    def destroy(self, instance, validated_data):
-        # достаем связанные данные для других таблиц
-        positions = validated_data.pop('positions')
-
-        # обновляем склад по его параметрам
-        stock = super().update(instance, validated_data)
-
-        # здесь вам надо обновить связанные таблицы
-        # в нашем случае: таблицу StockProduct
-        # с помощью списка positions
-
-        StockProduct.objects.filter(stock=stock).delete()
-
-        return stock

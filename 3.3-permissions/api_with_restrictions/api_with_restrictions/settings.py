@@ -85,9 +85,9 @@ REST_FRAMEWORK = {
         'user': '20/minute',
         'anon': '10/minute',
     },
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ]
+    # 'DEFAULT_FILTER_BACKENDS': [
+    #     'django_filters.rest_framework.DjangoFilterBackend'
+    # ]
 }
 
 WSGI_APPLICATION = 'api_with_restrictions.wsgi.application'
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'api_with_restrictions.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'netology_classified_ads',
+        'NAME': 'netology_classified_ads_test',
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'USER': 'postgres',
@@ -132,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Moscow'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

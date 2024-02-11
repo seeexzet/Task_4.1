@@ -19,14 +19,15 @@ def factory_courses():
 def test_course_retrieve(client, factory_courses):
     #arrange
     course = factory_courses(_quantity=1)
+    url = f'/api/v1/courses/{course[0].id}/'
 
     #act
-    response = client.get('/courses/')
+    response = client.get(url)
 
     #assert
     assert response.status_code == 200
     data = response.json()
-    assert data[0]['name'] == course[0].name
+    assert data['name'] == course[0].name
 
 
 @pytest.mark.django_db
@@ -35,7 +36,7 @@ def test_courses(client, factory_courses):
     courses = factory_courses(_quantity=10)
 
     #act
-    response = client.get('/courses/')
+    response = client.get('/api/v1/courses/')
 
     #assert
     assert response.status_code == 200
@@ -51,7 +52,7 @@ def test_filter_courses_by_id(client, factory_courses):
 
     #act
     numb = randint(courses[0].id, courses[9].id)
-    response = client.get('/courses/', data = {'id': numb}, format = 'json')
+    response = client.get('/api/v1/courses/', data = {'id': numb}, format = 'json')
 
     #assert
     assert response.status_code == 200
@@ -67,7 +68,7 @@ def test_filter_courses_by_name(client, factory_courses):
     #act
     col = randint(courses[0].id, courses[9].id) - courses[0].id
     numb = courses[col].name
-    response = client.get('/courses/', data = {'name': numb}, format = 'json')
+    response = client.get('/api/v1/courses/', data = {'name': numb}, format = 'json')
 
     #assert
     assert response.status_code == 200
@@ -78,11 +79,11 @@ def test_filter_courses_by_name(client, factory_courses):
 @pytest.mark.django_db
 def test_create_course(client):
     #arrange
-    letter = random.choice(string.ascii_letters)
+    letter = random.choice(string.ascii_letters) + random.choice(string.ascii_letters)
     data = {'name': letter}
 
     #act
-    response = client.post('/courses/', data, format = 'json')
+    response = client.post('/api/v1/courses/', data, format = 'json')
 
     #assert
     assert response.status_code == 201
@@ -92,35 +93,30 @@ def test_create_course(client):
     assert data['name'] == letter
 
 
-# @pytest.mark.django_db
-# def test_patch_course(client, factory_courses):
-#     #arrange
-#     courses = factory_courses(_quantity=1)
-#     response = client.get('/courses/')
-#     patch_id = response.json()[0]['id']
-#
-#     #act
-#     patch_text = 'new_name'
-#     response = client.patch('/courses/', data = {'id': patch_id, 'name': patch_text}, format = 'json')
-#
-#     #assert
-#     #assert response.status_code == 200
-#     data = response.json()
-#     assert data == patch_text
+@pytest.mark.django_db
+def test_patch_course(client, factory_courses):
+    #arrange
+    course = factory_courses(_quantity=1)
+    url = f'/api/v1/courses/{course[0].id}/'
+
+    #act
+    patch_text = 'new_name'
+    response = client.patch(url, data = {'name': patch_text}, format = 'json')
+
+    #assert
+    assert response.status_code == 200
+    data = response.json()
+    assert data['name'] == patch_text
 
 
 @pytest.mark.django_db
 def test_delete_course(client, factory_courses):
     #arrange
-    courses = factory_courses(_quantity=1)
-    response = client.get('/courses/')
-    course_id = response.json()[0]['id']
+    course = factory_courses(_quantity=1)
+    url = f'/api/v1/courses/{course[0].id}/'
 
     #act
-    response = client.delete('/courses/', data = {'id': course_id}, format = 'json')
+    response = client.delete(url)
 
     #assert
-    #assert response.status_code == 200
-    data = response.json()
-    print(data)
-    assert data[0]['id'] == course_id
+    assert response.status_code == 204

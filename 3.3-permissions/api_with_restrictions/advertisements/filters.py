@@ -1,4 +1,4 @@
-from django_filters import rest_framework as filters, DateTimeFromToRangeFilter, DateFromToRangeFilter
+from django_filters import rest_framework as filters, DateTimeFromToRangeFilter
 
 from advertisements.models import Advertisement
 
@@ -11,5 +11,5 @@ class FilterAdv(filters.FilterSet):
 
     class Meta:
         model = Advertisement
-        fields = ['creator', 'created_at']
+        fields = ['creator', 'created_at', 'status']
 

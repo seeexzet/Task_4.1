@@ -42,9 +42,8 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
         # TODO: добавьте требуемую валидацию
-        adv_objects = Advertisement.objects.filter(creator=self.context["request"].user).filter(status="OPEN")
+        adv_objects  = Advertisement.objects.filter(creator=self.context["request"].user, status="OPEN")
         max_avd = 10
-        if (self.context["request"].method == "POST" and len(adv_objects) >= max_avd) or \
-                (self.context["request"].method == 'PATCH' and len(Advertisement.objects.filter(id=self.instance.id).filter(status="CLOSED")) != 0 and len(adv_objects) >= max_avd and data["status"] == "OPEN"):
+        if adv_objects.count() >= max_avd and (self.context["request"].method == "POST" or data.get("status") == "OPEN"):
             raise ValidationError('Cлишком много открытых объявлений')
         return data

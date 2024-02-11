@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from django_filters import rest_framework
+from django_filters import rest_framework as filters
 
 from advertisements.filters import FilterAdv
 from advertisements.permissions import IsOwnerOrReadOnly
@@ -15,8 +15,7 @@ class AdvertisementViewSet(ModelViewSet):
     #   сериализаторов и фильтров
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    filterset_fields = ['creator', 'created_at', 'id']
-    filter_backends = (rest_framework.DjangoFilterBackend, )
+    filter_backends = (filters.DjangoFilterBackend, )
     filterset_class = FilterAdv
 
     def get_permissions(self):
